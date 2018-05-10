@@ -8,33 +8,35 @@
 
 import UIKit
 class SqlData: NSObject {
-    var id : Int!
+    var id : Int?
     var name : String?
     var latitude : Double?
     var longitude : Double?
     var note : String?
     var imageData : Data?
-    
+    var address : String?
     public override init() {
         super.init()
     }
     
-    public init(id : Int, name : String?, latitude : Double?, longitude : Double?, note : String?, imageData : Data?) {
+    public init(id : Int?, name : String?, latitude : Double?, longitude : Double?, note : String?, address : String?, imageData : Data?) {
         super.init()
         self.id = id
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
+        self.address = address
         self.note = note
         self.imageData = imageData
     }
-    public init(id : Int, name : String?, latitude : Double?, longitude : Double?, note : String?, image : UIImage?) {
+    public init(id : Int?, name : String?, latitude : Double?, longitude : Double?, note : String?, address : String?, image : UIImage?) {
         super.init()
         self.id = id
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
         self.note = note
+        self.address = address
         var imgData : Data?
         // 將 image 轉成 data
         if let image = image{

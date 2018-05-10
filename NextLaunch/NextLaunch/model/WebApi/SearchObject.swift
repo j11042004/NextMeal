@@ -41,19 +41,17 @@ class SearchObject: NSObject {
         }
         // 搜尋附近的url
         var urlStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(location.latitude),\(location.longitude)&radius=\(radius)&keyword=\(queryEncoding)&language=zh-TW&key=\(apiKey)"
-        
+        // 若有 nextToken 就加入
         if let next = nextToken {
             urlStr = "\(urlStr)&pagetoken=\(next)"
         }
-        
         guard let url = URL(string: urlStr) else {
             print("url is nil")
             let errStr = "url is nil"
             completion(nil , errStr)
             return
         }
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        let request = URLRequest(url: url)
         let configure = URLSessionConfiguration.default
         let session = URLSession(configuration: configure)
         let dataTask = session.dataTask(with: request) { (data, response, error) in
@@ -70,6 +68,7 @@ class SearchObject: NSObject {
             }
             if response.statusCode != 200 {
                 let errStr = "the StaeCode :\(response.statusCode) is error"
+                print("response : \(response)")
                 completion(nil , errStr)
                 return
             }
@@ -79,25 +78,17 @@ class SearchObject: NSObject {
                 completion(nil , errStr)
                 return
             }
-            // 轉換成 Json
-            do{
-                let jsonObject = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
-                guard let jsonDict = jsonObject as? [String : Any] else{
-                    let errStr = "jsonObject Dict is nil"
-                    completion(nil , errStr)
-                    print("jsonObject Dict is nil ")
-                    return
-                }
-                // 解析 json 資料並取得 nextPage Token 和 Places
-                self.decodeJsonToPlacesInfo(With: jsonDict, completion: { (places) in
-                    print("get places count : \(places?.count)")
-                    completion(places , nil)
-                })
-            }catch {
-                let errStr = "change to json Error : \(error.localizedDescription)"
+            let jsonObject = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+            guard let jsonDict = jsonObject as? [String : Any] else{
+                let errStr = "jsonObject Dict is nil"
                 completion(nil , errStr)
-                NSLog("change to json Error : \(error.localizedDescription)")
+                print("jsonObject Dict is nil ")
+                return
             }
+            // 解析 json 資料並取得 nextPage Token 和 Places
+            self.decodeJsonToPlacesInfo(With: jsonDict, completion: { (places) in
+                completion(places , nil)
+            })
         }
         dataTask.resume()
     }

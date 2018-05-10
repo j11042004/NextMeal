@@ -16,6 +16,7 @@ class SearchViewController: UIViewController {
     private let waitingView = WaitingView()
     private let location = Location.shardInstrance
     let search : SearchObject = SearchObject.shardInstance
+    let dataSearch = DataSearch.shardInstance
     private var userLocation : CLLocation!
     private var places : [ResultPlace] = [ResultPlace]()
     private var annotations : [MKAnnotation] = [MKAnnotation]()
@@ -41,20 +42,60 @@ class SearchViewController: UIViewController {
         
     }
     
-    /// 顯示 VC 顯示
-    func showDataVC(place : ResultPlace?) {
+    /// 顯示 DataViewController，
+    func showDataVC(place : ResultPlace? , data : SqlData?) {
         let bundele : Bundle = Bundle(for: DataViewController.self)
         let nextVC = DataViewController(nibName: "DataViewController", bundle: bundele)
-        nextVC.goalPlace = place
+        if data != nil {
+            nextVC.data = data
+        }else if place != nil{
+            nextVC.goalPlace = place
+        }else{
+            return
+        }
         // 轉場動畫效果
         let transition = CATransition()
         transition.duration = 0.3
         transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
         transition.type = kCATransitionReveal
         transition.subtype = kCATransitionFromRight
-        self.view.window?.layer.add(transition, forKey: nil)
-        self.present(nextVC, animated: false, completion: nil)
+        // 顯示 data VC
+        DispatchQueue.main.async {
+            self.view.window?.layer.add(transition, forKey: nil)
+            self.present(nextVC, animated: false, completion: nil)
+        }
     }
+    func searchData(With place : ResultPlace , completion : (_ data : SqlData?)->Void){
+        guard let name = place.name else {
+            completion(nil)
+            return
+        }
+        self.dataSearch.searchDataName(query: name) { (datas, errorMessage
+            ) in
+            guard let datas = datas else{
+                completion(nil)
+                return
+            }
+            var placeData : SqlData?
+            for data in datas {
+                // 判斷 data 的座標是否存在，以及是否等於 place 的座標
+                guard let lat = data.latitude,
+                      let lon = data.longitude,
+                      lat == place.location?.latitude ,
+                      lon == place.location?.longitude
+                else{
+                    continue
+                }
+                if placeData == nil {
+                    placeData = data
+                    break
+                }
+            }
+            completion(placeData)
+        }
+    }
+    
+    
 }
 // MARK: - LocationDelegate
 extension SearchViewController : LocationDelegate{
@@ -113,17 +154,20 @@ extension SearchViewController : SearchDelegate{
         search.searchPlaces(With: query, Location: location, Radius: radius, NextPage: nextToken) { (places, errorMsg) in
             if let errorMsg = errorMsg{
                 print("search Error Message : \(errorMsg)")
+                // 關閉搜尋 Waiting，跳出 Alert
                 self.waitingView.showing(false)
+                self.showErrorAlert(title: "搜尋錯誤", message: "無法搜尋到結果，請更換關鍵字與搜尋範圍，或過段時間再次搜尋!")
                 return
             }
             guard let places = places else{
+                // 關閉搜尋 Waiting，跳出 Alert
                 self.waitingView.showing(false)
+                self.showErrorAlert(title: "搜尋錯誤", message: "無法搜尋到結果，請更換關鍵字與搜尋範圍，或過段時間再次搜尋!")
                 return
             }
             for place in places{
                 guard let location = place.location else{
                     print("location is nil")
-                    self.waitingView.showing(false)
                     continue
                 }
                 self.places.append(place)
@@ -139,7 +183,7 @@ extension SearchViewController : SearchDelegate{
                 DispatchQueue.main.async {
                     // 關閉 WaitingView
                     self.waitingView.showing(false)
-                    self.showErrorAlert(title: "搜尋錯誤", message: "請更換關鍵字與搜尋範圍，或過段時間再次搜尋!")
+                    self.showErrorAlert(title: "搜尋錯誤", message: "無法搜尋到結果，請更換關鍵字與搜尋範圍，或過段時間再次搜尋!")
                 }
                 return
             }
@@ -266,6 +310,15 @@ extension SearchViewController : MKMapViewDelegate{
             return
         }
         let place = self.places[annIndex]
-        self.showDataVC(place: place)
+        
+        // 搜尋是否有 data ， 若有則顯示 data
+        self.searchData(With: place) { (data) in
+            guard let data = data else{
+                self.showDataVC(place: place, data: nil)
+                return
+            }
+            self.showDataVC(place: nil, data: data)
+        }
+        
     }
 }

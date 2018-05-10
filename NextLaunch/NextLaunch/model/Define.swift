@@ -9,6 +9,6 @@
 import UIKit
 
 class Define: NSObject {
-//    static let googleApiKey = "AIzaSyCffhdScaDR8s5aZq89_3v8xDa-FL5sGmk"
-    static let googleApiKey = "AIzaSyDbdlqg2-OXt2Tk5Gd818dyi28_xqDkrRI"
+    static let googleApiKey = "AIzaSyCffhdScaDR8s5aZq89_3v8xDa-FL5sGmk"
+//    static let googleApiKey = "AIzaSyDbdlqg2-OXt2Tk5Gd818dyi28_xqDkrRI"
 }

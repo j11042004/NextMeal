@@ -10,13 +10,14 @@ import UIKit
 class DBManager: NSObject {
     static let shared : DBManager = DBManager()
     
-    private let meal_Table = "Meal"
-    private let meal_ID = "ID"
-    private let meal_Name = "Name"
-    private let meal_Latitude = "Latitude"
-    private let meal_Longitude = "Longitude"
-    private let meal_Img = "Image"
-    private let meal_Note = "Note"
+    private let MealTable = "Meal"
+    private let MealID = "ID"
+    private let MealName = "Name"
+    private let MealLatitude = "Latitude"
+    private let MealLongitude = "Longitude"
+    private let MealImg = "Image"
+    private let MealNote = "Note"
+    private let MealAddress = "Address"
     
     private var databasePath : String!
     private let databaseFileName = "Meal.sqlite"
@@ -44,13 +45,11 @@ class DBManager: NSObject {
                 // Open the database. 這時 Database會被建立
                 if database.open() {
                     // 執行建立 Table 的 Query
-                    
-                    let createMoviesTableQuery = "CREATE TABLE \(meal_Table) ( \(meal_ID) INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \(meal_Name) TEXT, \(meal_Longitude) TEXT, \(meal_Latitude) TEXT, \(meal_Img) BLOB,\(meal_Note) TEXT );"
+                    let createMoviesTableQuery = "CREATE TABLE \(MealTable) ( \(MealID) INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \(MealName) TEXT, \(MealLongitude) TEXT, \(MealLatitude) TEXT, \(MealImg) BLOB,\(MealNote) TEXT,\(MealAddress) TEXT );"
                     do {
                         // 嘗試執行 Database
                         try database.executeUpdate(createMoviesTableQuery, values: nil)
                         created = true
-                        
                     }
                     catch {
                         print("Could not create table.")
@@ -99,10 +98,10 @@ class DBManager: NSObject {
         let latitude = data.latitude
         let imgData = data.imageData
         let note = data.note
-        
+        let address = data.address
         // 若有 nil 那格就存為 Null
         let null = NSNull()
-        let values : [Any?] = [name , longitude , latitude , imgData , note]
+        let values : [Any?] = [name , longitude , latitude , imgData , note , address]
         // 準備要加入的值
         var valueArray = [Any]()
         // 若是 Nil 就替換成 NSNull
@@ -114,7 +113,7 @@ class DBManager: NSObject {
             }
         }
         // 準備 Query
-        let query = "INSERT INTO \(meal_Table) (\(meal_Name),\(meal_Longitude),\(meal_Latitude),\(meal_Img),\(meal_Note)) VALUES (?,?,?,?,?);"
+        let query = "INSERT INTO \(MealTable) (\(MealName),\(MealLongitude),\(MealLatitude),\(MealImg),\(MealNote),\(MealAddress)) VALUES (?,?,?,?,?,?);"
         // 執行 Sql 並把值帶入
         do {
             try database.executeUpdate(query, values: valueArray)
@@ -141,10 +140,10 @@ class DBManager: NSObject {
         let latitude = data.latitude
         let imgData = data.imageData
         let note = data.note
-        
+        let address = data.address
         // 若有 nil 那格就存為 Null
         let null = NSNull()
-        let values : [Any?] = [name , longitude , latitude , imgData , note]
+        let values : [Any?] = [name , longitude , latitude , imgData , note , address]
         // 準備要加入的值
         var valueArray = [Any]()
         // 若是 Nil 就替換成 NSNull
@@ -156,7 +155,7 @@ class DBManager: NSObject {
             }
         }
         // 準備 Query
-        let query = "UPDATE \(meal_Table) SET \(meal_Name) = ?,\(meal_Longitude) = ?,\(meal_Latitude) = ?,\(meal_Img) = ?,\(meal_Note) = ? WHERE \(meal_ID) = \(id);"
+        let query = "UPDATE \(MealTable) SET \(MealName) = ?,\(MealLongitude) = ?,\(MealLatitude) = ?,\(MealImg) = ?,\(MealNote) = ? ,\(MealAddress) = ? WHERE \(MealID) = \(id);"
         // 執行 Sql 並把值帶入
         do {
             try database.executeUpdate(query, values: valueArray)
@@ -173,7 +172,7 @@ class DBManager: NSObject {
         if !openDatabase() {
             return dataArray
         }
-        let query = "SELECT * FROM \(meal_Table)"
+        let query = "SELECT * FROM \(MealTable)"
         do {
             let results = try self.database.executeQuery(query, values: nil)
 //            dataArray.append(self.loadInformation(results))
@@ -199,7 +198,7 @@ class DBManager: NSObject {
         if !self.openDatabase(){
             return delete
         }
-        let query = "delete from \(meal_Table) where \(meal_ID)=?"
+        let query = "delete from \(MealTable) where \(MealID)=?"
         do {
             try database.executeUpdate(query, values: [id])
             delete = true
@@ -214,17 +213,18 @@ class DBManager: NSObject {
     /// - Parameter result: 被取得的 Result
     /// - Returns: 轉換完的 DataArray
     private func loadInformation(_ result : FMResultSet) -> SqlData{
-        let id = Int(result.int(forColumn: meal_ID))
-        let name = result.string(forColumn: meal_Name)
-        let latStr = result.string(forColumn: meal_Latitude)
-        let lonStr = result.string(forColumn: meal_Longitude)
-        let note = result.string(forColumn: meal_Note)
-        let imageData = result.data(forColumn: meal_Img)
+        let id = Int(result.int(forColumn: MealID))
+        let name = result.string(forColumn: MealName)
+        let latStr = result.string(forColumn: MealLatitude)
+        let lonStr = result.string(forColumn: MealLongitude)
+        let address = result.string(forColumn: MealAddress)
+        let note = result.string(forColumn: MealNote)
+        let imageData = result.data(forColumn: MealImg)
         // 將 座標轉成 Double
         let lat = self.strToDouble(str: latStr)
         let lon = self.strToDouble(str: lonStr)
         
-        let data = SqlData(id: id, name: name, latitude: lat, longitude: lon, note: note, imageData: imageData)
+        let data = SqlData(id: id, name: name, latitude: lat, longitude: lon, note: note, address : address ,imageData: imageData)
         return data
     }
     private func strToDouble(str:String?) -> Double?{

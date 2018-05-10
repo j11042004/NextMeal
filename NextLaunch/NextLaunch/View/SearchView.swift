@@ -88,6 +88,7 @@ class SearchView: UIView {
         self.cancelButton.isHidden = true
         self.selectLeftConstraint.constant =  -self.selectButton.frame.width
         self.cancelRightConstraint.constant =  -self.cancelButton.frame.width
+        // 關閉搜尋畫面
         self.presentTheSearch(false)
         self.addSubview(view)
         self.searchTextField.delegate = self
@@ -112,6 +113,7 @@ class SearchView: UIView {
             self.selectButton.isHidden = false
             self.cancelButton.isHidden = false
         }
+        // 顯示與消失 cancel Button 的動畫
         UIView.animate(withDuration: 0.5, animations: {
             self.layoutIfNeeded()
             self.selectButton.alpha = show ? 1 : 0
@@ -131,18 +133,18 @@ class SearchView: UIView {
     }
     
     @IBAction func insertRegionAlert(_ sender: UIButton) {
-        let alert = UIAlertController(title: "請輸入範圍", message: "範圍最小為 10 公尺，最大為 10000 公尺", preferredStyle: .alert)
+        let alert = UIAlertController(title: "請輸入範圍", message: "範圍最小為 500 公尺，最大為 10000 公尺", preferredStyle: .alert)
         alert.addTextField { (textfield) in
             // 設定鍵盤的種類
             textfield.keyboardType = .numbersAndPunctuation
         }
         let decide = UIAlertAction(title: "確定", style: .default) { (_) in
-            // 判斷輸入框的文字是否可轉成 Float ，並且 > 10
+            // 判斷輸入框的文字是否可轉成 Float ，並且 > 最小值
             guard let text = alert.textFields?.first?.text,
                 let value = Float(text),
-                value > 10
+                value > self.regionSlider.minimumValue
             else{
-                self.changeRadiusValue(value: 10)
+                self.changeRadiusValue(value: self.regionSlider.minimumValue)
                 return
             }
             // 若超過最大值就設為最大值
@@ -169,7 +171,6 @@ class SearchView: UIView {
         self.regionLabel.text = "\(value)"
         self.delegate?.serchViewChangedSearchRegion?(With: value)
     }
-    
 }
 
 extension SearchView : UITextFieldDelegate{
@@ -177,7 +178,6 @@ extension SearchView : UITextFieldDelegate{
         self.presentTheSearch(true)
         // func 後面的 ? 是判斷是否有實作 option func 若有就執行，若無就不動作
         delegate?.serchViewDidBegainEditing?(textField, radius: self.regionSlider.value)
-        
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         self.endEditing(true)

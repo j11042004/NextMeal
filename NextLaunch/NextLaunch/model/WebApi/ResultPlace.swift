@@ -80,7 +80,9 @@ class ResultPlace: NSObject {
             return
         }
         // 取得代表照片
-        self.stickerPhoto = self.getPlaceImage(With: photoRef)
+        self.getPlaceImage(With: photoRef) { (image) in
+            self.stickerPhoto = image
+        }
         // 取得地點詳細資訊
         self.getPlaceDetailInfos()
     }
@@ -108,22 +110,41 @@ class ResultPlace: NSObject {
     /// 從 Google Place Photo reference 中取得圖片
     ///
     /// - Parameter reference: 圖片來源的 id
-    /// - Returns: UIImge?
-    open func getPlaceImage(With reference : String) -> UIImage?{
+    open func getPlaceImage(With reference : String , complete : @escaping (_ image : UIImage? )  -> Void){
         // 取得圖片的網址
         let imageURLStr = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=\(reference)&key=\(Define.googleApiKey)"
         guard let photoUrl = URL(string: imageURLStr) else{
             print("photoUrl is nil")
-            return nil
+            complete(nil)
+            return
         }
-        do{
-            let data = try Data(contentsOf: photoUrl)
-            let photo = UIImage(data: data)
-            return photo
-        }catch{
-            NSLog("Photo Data error :\(error.localizedDescription)")
-            return nil
+        let request = URLRequest(url: photoUrl)
+        let configure = URLSessionConfiguration.default
+        let session = URLSession(configuration: configure)
+        let dataTask = session.dataTask(with: request) { (data, response, error) in
+            if let error = error{
+                NSLog("photo Error : \(error.localizedDescription)")
+                complete(nil)
+                return
+            }
+            // 判斷 response 是否存在，以及 status code 是否為 200
+            guard let response = response as? HTTPURLResponse ,
+                  response.statusCode != 200
+                else{
+                print("http response is nil or status code is not 200")
+                complete(nil)
+                return
+            }
+            
+            guard let data = data else{
+                NSLog("photo data is nil")
+                complete(nil)
+                return
+            }
+            let image = UIImage(data: data)
+            complete(image)
         }
+        dataTask.resume()
     }
     /// 將 urlString 轉成 UIImage
     open func changeUrlToImage(With urlStr :String) -> UIImage?{

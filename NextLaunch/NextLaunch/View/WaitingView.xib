@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -20,8 +21,12 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lji-B3-aJ2">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <rect key="frame" x="87.5" y="233.5" width="200" height="200"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="Ji7-cL-adA"/>
+                        <constraint firstAttribute="width" secondItem="Lji-B3-aJ2" secondAttribute="height" multiplier="1:1" id="Nl2-gq-0Wl"/>
+                    </constraints>
                 </view>
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="1OK-K1-EtH">
                     <rect key="frame" x="147.5" y="293.5" width="80" height="80"/>
@@ -31,13 +36,19 @@
                     </constraints>
                     <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </activityIndicatorView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="等待中..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xzg-iw-qWS">
+                    <rect key="frame" x="154.5" y="373.5" width="66" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="Lji-B3-aJ2" secondAttribute="bottom" id="31e-JM-63c"/>
-                <constraint firstAttribute="trailing" secondItem="Lji-B3-aJ2" secondAttribute="trailing" id="7cs-rI-pvX"/>
-                <constraint firstItem="Lji-B3-aJ2" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="DBZ-Ad-nxY"/>
-                <constraint firstItem="Lji-B3-aJ2" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Sfc-Zy-iPT"/>
+                <constraint firstItem="Lji-B3-aJ2" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Fqc-pk-IKt"/>
+                <constraint firstItem="xzg-iw-qWS" firstAttribute="top" secondItem="1OK-K1-EtH" secondAttribute="bottom" id="M3Z-cX-XlF"/>
+                <constraint firstItem="xzg-iw-qWS" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="YLr-ih-OPa"/>
+                <constraint firstItem="Lji-B3-aJ2" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="cF4-fc-jwD"/>
                 <constraint firstItem="1OK-K1-EtH" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="n3B-ac-Eyg"/>
                 <constraint firstItem="1OK-K1-EtH" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="yWj-vE-lot"/>
             </constraints>

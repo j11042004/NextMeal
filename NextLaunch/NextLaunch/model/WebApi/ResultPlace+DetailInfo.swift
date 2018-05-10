@@ -25,8 +25,7 @@ extension ResultPlace {
             return
         }
         // 進行 http 要求
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        let request = URLRequest(url: url)
         let configure = URLSessionConfiguration.default
         let session = URLSession(configuration: configure)
         let dataTask = session.dataTask(with: request) { (data, response, error) in
@@ -125,9 +124,12 @@ extension ResultPlace {
             }
             
             // 根據 reference 取得圖片
-            if let image = self.getPlaceImage(With: photo.reference) {
-                self.photos?.append(image)
+            self.getPlaceImage(With: photo.reference) { (image) in
+                if let image = image{
+                    self.photos?.append(image)
+                }
             }
+            
         }
     }
     

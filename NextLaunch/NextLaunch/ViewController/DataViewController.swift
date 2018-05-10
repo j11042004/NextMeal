@@ -113,6 +113,8 @@ class DataViewController: UIViewController {
     /// 將取得的Data 資料放到 UI 上
     func setDataInfo(){
         self.goalTextField.text = self.data?.name
+        self.addressTextView.text = self.data?.address
+        
         if self.goalTextField.text?.count == 0{
             // 用程式碼觸發 decideAddressBtn 的 方法，讓使用者一開始不行在 map 上新增 目的地
             self.decideAddressBtn.sendActions(for: .touchUpInside)
@@ -152,12 +154,12 @@ class DataViewController: UIViewController {
             // 用程式碼觸發 decideAddressBtn 的 方法
             self.decideAddressBtn.sendActions(for: .touchUpInside)
         }
-        
+        self.addressTextView.text = self.goalPlace?.address
         // 放入圖片
         if let image = self.goalPlace?.stickerPhoto {
             self.imageView.image = image
         }
-        // 放入地址
+        // 放入座標
         guard let coordinate = goalPlace?.location else{
             self.leadBtn.isHidden = true
             return
@@ -244,6 +246,7 @@ extension DataViewController {
     @IBAction func saveDataAction(_ sender: UIButton) {
         self.view.endEditing(true)
         var name : String!
+        // 判斷是否有設定目的地名
         if let goalName = self.goalTextField.text ,
             goalName.count > 0
         {
@@ -253,6 +256,7 @@ extension DataViewController {
         }
         
         let note = self.noteTextView.text
+        let address = self.addressTextView.text
         let image = self.imageView.image
         var latitude : Double?
         var longtiude : Double?
@@ -275,12 +279,14 @@ extension DataViewController {
             savedData.latitude = latitude
             savedData.longitude = longtiude
             savedData.note = note
+            savedData.address = address
             if let image = image{
                 let data = UIImagePNGRepresentation(image)
                 savedData.imageData = data
             }else{
                 savedData.imageData = nil
             }
+            // 更新 Data
             if database.updateData(savedData) {
                 self.showSureAlert(title: nil, message: "已更新成功", cancelTitle: "確定")
                 self.data = savedData
@@ -290,7 +296,8 @@ extension DataViewController {
                 self.showSureAlert(title: nil, message: "更新失敗", cancelTitle: "確定")
             }
         }else{
-            let savedData = SqlData(id: 0, name: name, latitude: latitude, longitude: longtiude, note: note, image: image)
+            let savedData = SqlData(id: nil, name: name, latitude: latitude, longitude: longtiude, note: note, address: address, image: image)
+            // 新增 Data
             if database.insertData(savedData) {
                 self.showSureAlert(title: nil, message: "已儲存成功", cancelTitle: "確定")
                 // 將VC 的 data 設為這建立的 data，避免之後建立後又再次跳到這
@@ -326,7 +333,7 @@ extension DataViewController {
         self.view.endEditing(true)
         self.leadMapNavigation()
     }
-    // 決定地點
+    /// 決定地點
     @IBAction func DecideAddressAction(_ sender: UIButton) {
         self.changeBool = !self.changeBool
         if self.changeBool {
@@ -342,8 +349,7 @@ extension DataViewController {
         if self.addressTextView.text != nil {
             self.leadBtn.isHidden = false
         }
-        // 將目的地座標做更換
-        self.addAnnotationByAddress(self.addressTextView.text)
+        
     }
     
     /// 在 地圖上用點擊新增 Annotation
@@ -403,12 +409,18 @@ extension DataViewController : MKMapViewDelegate{
             // 新增座標點
             self.mapView.addAnnotation(pinAnnotation)
         }
-        // 將座標轉成地址
-        self.addressManager.coordinateToAddress(With: coordinate) { (success, error, address) in
-            if success{
-                self.addressTextView.text = address
+        // 判斷地址欄是否有 地址，若有就不轉換並加入
+        if let address = self.addressTextView.text ,
+            address.count > 0 {
+            print("有值")
+        }else{
+            self.addressManager.coordinateToAddress(With: coordinate) { (success, error, address) in
+                if success{
+                    self.addressTextView.text = address
+                }
             }
         }
+        
         // 在這更新 goalLocation
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         self.goalLocation = location

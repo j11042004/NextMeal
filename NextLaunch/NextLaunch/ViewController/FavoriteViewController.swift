@@ -23,7 +23,7 @@ class FavoriteViewController: UIViewController {
     let dataCellID = "DataCell"
     var sqlDatas : [SqlData]!
     let database = DBManager.shared
-    let address = AddressManager.shared
+    let dataSearch = DataSearch.shardInstance
     let searchBar : UISearchBar = UISearchBar()
     private let searchbarWidth = UIScreen.main.bounds.width * 2/3
     
@@ -51,15 +51,13 @@ class FavoriteViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // 判斷是否有 leftBarButtonItems
-        if self.navigationItem.leftBarButtonItems != nil {
-            self.searchResult(self.searchBar.text)
-        }else{
-            self.sqlDatas = database.searchAllData()
-            self.tableView.reloadData()
-        }
+        self.sqlDatas = database.searchAllData()
+        self.tableView.reloadData()
         // 顯示 navigationBar
         self.navigationController?.navigationBar.isHidden = false
-        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         // sqlData 去搜尋全部的資料
         self.sqlDatas = database.searchAllData()
         self.tableView.reloadData()
@@ -137,18 +135,10 @@ extension FavoriteViewController : UITableViewDelegate,UITableViewDataSource{
             return cell
         }
         let data = sqlDatas[indexPath.row]
-        // 判斷 座標是否存在
-        if let lat = data.latitude ,
-            let lon = data.longitude
-        {
-            let coordinate = CLLocationCoordinate2D.init(latitude: lat, longitude: lon)
-            // 將座標轉成地址
-            address.coordinateToAddress(With: coordinate) { (success, error, addressStr) in
-                dataCell.noteLabel.text = addressStr
-            }
-        }
-        
         dataCell.storeLabel.text = data.name
+        dataCell.noteLabel.text = data.address
+        
+        dataCell.storeLabel.numberOfLines = 0
         dataCell.noteLabel.numberOfLines = 0
         dataCell.noteLabel.sizeToFit()
         return dataCell
@@ -163,7 +153,11 @@ extension FavoriteViewController : UITableViewDelegate,UITableViewDataSource{
         if editingStyle == .delete {
             // 刪除 Sql Data
             let deleteData = sqlDatas[indexPath.row]
-            if database.deleteData(withID: deleteData.id) {
+            // 判斷有沒有 id
+            guard let dataID = deleteData.id else{
+                return
+            }
+            if database.deleteData(withID: dataID) {
                 sqlDatas.remove(at: indexPath.row)
                 self.tableView.reloadData()
             }else{
@@ -193,40 +187,53 @@ extension FavoriteViewController : UISearchBarDelegate{
     // 鍵盤上 Search 鍵被按
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
-        self.searchResult(searchBar.text)
         searchBar.endEditing(true)
-    }
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.searchResult(searchText)
-    }
-    
-    /// 根據搜尋文字取得搜尋結果
-    func searchResult(_ searchText : String?){
-        let allData = database.searchAllData()
-        if searchText == nil || searchText?.count == 0 {
-            self.sqlDatas = allData
-            self.tableView.reloadData()
+        guard let query = searchBar.text else {
             return
         }
-        // 看 data 中是否有包含關鍵字
-        let datas = allData.filter { (data) -> Bool in
-            // 全轉成小寫，再進行比對
-            guard let text = searchText?.lowercased() else {
-                return false
+        self.dataSearch.searchData(query: query) { (datas, errorMessage) in
+            if let errorMsg = errorMessage{
+                print("搜尋錯誤 :\(errorMsg)")
+                return
             }
-            guard let note = data.note?.lowercased() else{
-                return false
+            guard let datas = datas else{
+                return
             }
-            let noteBool = note.contains(text)
-            guard let name = data.name?.lowercased() else{
-                return false
+            self.sqlDatas = datas
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
-            let nameBool = name.contains(text)
-            return noteBool || nameBool
         }
-        self.sqlDatas = datas
-        self.tableView.reloadData()
     }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // 判斷輸入自是否存在並且大於 0
+        guard let query = searchBar.text,
+                 query.count > 0
+            else {
+                // 顯示所有的 data
+                self.sqlDatas = self.database.searchAllData()
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            return
+        }
+        // 搜尋有包含的關鍵字
+        self.dataSearch.searchData(query: query) { (datas, errorMessage) in
+            if let errorMsg = errorMessage{
+                print("搜尋錯誤 :\(errorMsg)")
+                return
+            }
+            guard let datas = datas else{
+                return
+            }
+            self.sqlDatas = datas
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    
 }
 
 extension FavoriteViewController{

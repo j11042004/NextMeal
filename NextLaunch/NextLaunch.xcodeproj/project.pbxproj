@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0443DC1720A43A45000DD5E8 /* DataSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443DC1620A43A45000DD5E8 /* DataSearch.swift */; };
 		0446F85A205BD9B500525D0A /* dice.png in Resources */ = {isa = PBXBuildFile; fileRef = 0446F859205BD9B500525D0A /* dice.png */; };
 		0480165E20591133008F3507 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0480165D20591133008F3507 /* AppDelegate.swift */; };
 		0480166020591133008F3507 /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0480165F20591133008F3507 /* FavoriteViewController.swift */; };
@@ -57,6 +58,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0443DC1620A43A45000DD5E8 /* DataSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSearch.swift; sourceTree = "<group>"; };
 		0446F859205BD9B500525D0A /* dice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dice.png; sourceTree = "<group>"; };
 		0480165A20591133008F3507 /* NextLaunch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NextLaunch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0480165D20591133008F3507 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -136,6 +138,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0443DC1520A3E3BB000DD5E8 /* SqlData */ = {
+			isa = PBXGroup;
+			children = (
+				048016842059177B008F3507 /* DBManager.swift */,
+				04A67AEA205A12EE0025B165 /* SqlData.swift */,
+				0443DC1620A43A45000DD5E8 /* DataSearch.swift */,
+			);
+			path = SqlData;
+			sourceTree = "<group>";
+		};
 		0480165120591133008F3507 = {
 			isa = PBXGroup;
 			children = (
@@ -196,8 +208,7 @@
 			children = (
 				04FC8B79205A7300001EAB06 /* RootVCManager.swift */,
 				04FC8B77205A7203001EAB06 /* ImagePickerManager.swift */,
-				048016842059177B008F3507 /* DBManager.swift */,
-				04A67AEA205A12EE0025B165 /* SqlData.swift */,
+				0443DC1520A3E3BB000DD5E8 /* SqlData */,
 				04DB3FAF2060DF06001BEF7A /* AddressManager.swift */,
 				0496E3B320A1AA6900F70F09 /* Define.swift */,
 				0496E3B820A1AA6900F70F09 /* Location.swift */,
@@ -400,6 +411,7 @@
 				0496E3A720A1855600F70F09 /* SearchView.swift in Sources */,
 				0480166020591133008F3507 /* FavoriteViewController.swift in Sources */,
 				0496E3AD20A1A16500F70F09 /* SearchNavigationController.swift in Sources */,
+				0443DC1720A43A45000DD5E8 /* DataSearch.swift in Sources */,
 				0480165E20591133008F3507 /* AppDelegate.swift in Sources */,
 				0496E3BE20A1AA6900F70F09 /* ResultPlace.swift in Sources */,
 				04C42E0B20A1641B002C0438 /* SearchViewController.swift in Sources */,
