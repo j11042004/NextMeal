@@ -1,0 +1,6 @@
+framework module Pods_NextLaunch {
+  umbrella header "Pods-NextLaunch-umbrella.h"
+
+  export *
+  module * { export * }
+}
