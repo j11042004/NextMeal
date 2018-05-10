@@ -13,6 +13,7 @@ class SearchViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var searchView: SearchView!
+    @IBOutlet weak var nowButton: UIButton!
     private let waitingView = WaitingView()
     private let location = Location.shardInstrance
     let search : SearchObject = SearchObject.shardInstance
@@ -24,6 +25,8 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
         searchView.delegate = self
         location.requestLocationAllowed()
+        self.nowButton.layer.cornerRadius = self.nowButton.frame.width/2
+        self.nowButton.layer.masksToBounds = true
         
         self.view.addSubview(self.waitingView)
     }
@@ -39,7 +42,9 @@ class SearchViewController: UIViewController {
         self.waitingView.addWaitingViewConstraint(With: self.view)
         self.view.layoutIfNeeded()
         self.waitingView.showing(false)
-        
+    }
+    @IBAction func moveToUesrLocation(_ sender: UIButton) {
+        self.moveRegion(coordinate: self.mapView.userLocation.coordinate, degree: 0.001)
     }
     
     /// 顯示 DataViewController，

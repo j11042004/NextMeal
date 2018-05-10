@@ -20,7 +20,6 @@
 		048016802059119D008F3507 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 048016792059119D008F3507 /* FMResultSet.m */; };
 		048016852059177B008F3507 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048016842059177B008F3507 /* DBManager.swift */; };
 		0480168A20592E3B008F3507 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0480168920592E3B008F3507 /* libsqlite3.tbd */; };
-		0496E3A520A17AF500F70F09 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496E3A420A17AF500F70F09 /* TestViewController.swift */; };
 		0496E3A720A1855600F70F09 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496E3A620A1855600F70F09 /* SearchView.swift */; };
 		0496E3A920A1855D00F70F09 /* SearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0496E3A820A1855D00F70F09 /* SearchView.xib */; };
 		0496E3AB20A19F4B00F70F09 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496E3AA20A19F4B00F70F09 /* TabBarViewController.swift */; };
@@ -80,7 +79,6 @@
 		0480167B2059119D008F3507 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
 		048016842059177B008F3507 /* DBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBManager.swift; sourceTree = "<group>"; };
 		0480168920592E3B008F3507 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		0496E3A420A17AF500F70F09 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		0496E3A620A1855600F70F09 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		0496E3A820A1855D00F70F09 /* SearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchView.xib; sourceTree = "<group>"; };
 		0496E3AA20A19F4B00F70F09 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +97,10 @@
 		0497B1CD2063443C007A284E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0497B1CF2063445B007A284E /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		0497B1D120634467007A284E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		04A193CC20A4505300F52402 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		04A193CD20A4505300F52402 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		04A193CE20A4511600F52402 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		04A193CF20A4511600F52402 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		04A67AEA205A12EE0025B165 /* SqlData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqlData.swift; sourceTree = "<group>"; };
 		04A67AF1205A1A230025B165 /* DataTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTableCell.swift; sourceTree = "<group>"; };
 		04A67AF5205A1B6B0025B165 /* DataTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DataTableCell.xib; sourceTree = "<group>"; };
@@ -171,7 +173,6 @@
 			children = (
 				0480165D20591133008F3507 /* AppDelegate.swift */,
 				0480166120591133008F3507 /* Main.storyboard */,
-				0496E3A420A17AF500F70F09 /* TestViewController.swift */,
 				04DB3FB720610025001BEF7A /* ViewController */,
 				04A67AEC205A19C70025B165 /* View */,
 				0480168120591328008F3507 /* model */,
@@ -347,7 +348,6 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
 			);
 			mainGroup = 0480165120591133008F3507;
@@ -431,7 +431,6 @@
 				04A67AEB205A12EE0025B165 /* SqlData.swift in Sources */,
 				0480167F2059119D008F3507 /* FMDatabaseQueue.m in Sources */,
 				04A67AF9205A28290025B165 /* DataViewController.swift in Sources */,
-				0496E3A520A17AF500F70F09 /* TestViewController.swift in Sources */,
 				0496E3AF20A1A17300F70F09 /* SavedNavigationController.swift in Sources */,
 				0496E3BC20A1AA6900F70F09 /* Define.swift in Sources */,
 				04FC8B78205A7203001EAB06 /* ImagePickerManager.swift in Sources */,
@@ -446,6 +445,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				0480166220591133008F3507 /* Base */,
+				04A193CC20A4505300F52402 /* zh-Hant */,
+				04A193CE20A4511600F52402 /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -454,6 +455,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				0480166720591133008F3507 /* Base */,
+				04A193CD20A4505300F52402 /* zh-Hant */,
+				04A193CF20A4511600F52402 /* en */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -466,6 +469,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -524,6 +528,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

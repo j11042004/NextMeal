@@ -412,7 +412,6 @@ extension DataViewController : MKMapViewDelegate{
         // 判斷地址欄是否有 地址，若有就不轉換並加入
         if let address = self.addressTextView.text ,
             address.count > 0 {
-            print("有值")
         }else{
             self.addressManager.coordinateToAddress(With: coordinate) { (success, error, address) in
                 if success{
