@@ -37,7 +37,7 @@ class WaitingView: UIView {
         let bundle = Bundle(for: type(of: self))
         let nib = UINib(nibName: xibStr, bundle: bundle)
         let view = nib.instantiate(withOwner: self, options: nil)[0] as! UIView
-        view.frame = self.frame
+        view.frame = self.bounds
         return view
     }
     

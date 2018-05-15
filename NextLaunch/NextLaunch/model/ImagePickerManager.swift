@@ -120,7 +120,11 @@ class ImagePickerManager: NSObject {
         let alert = UIAlertController(title: Title, message: Message, preferredStyle: .alert)
         let ok = UIAlertAction(title: "OK", style: .default) { (action) in
             if let settingUrl = URL(string: UIApplicationOpenSettingsURLString){
-                UIApplication.shared.open(settingUrl, options: [String : Any](), completionHandler: nil)
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(settingUrl, options: [String : Any](), completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(settingUrl)
+                }
             }
         }
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -210,17 +214,20 @@ extension ImagePickerManager:UIImagePickerControllerDelegate,UINavigationControl
         let resizeImg = info[UIImagePickerControllerEditedImage] as? UIImage
         let savedImg =  resizeImg != nil ? resizeImg! : originalImg!
         
-        if let imagePath = info[UIImagePickerControllerImageURL] as? NSURL {
-            if let imageName = imagePath.lastPathComponent {
-                NSLog("選到的圖片名:\(imageName)")
-            }
-        }else{
-            if picker.sourceType == .camera{
-                NSLog("相機照片")
+        if #available(iOS 11.0 , *) {
+            if let imagePath = info[UIImagePickerControllerImageURL] as? NSURL {
+                if let imageName = imagePath.lastPathComponent {
+                    NSLog("選到的圖片名:\(imageName)")
+                }
             }else{
-                NSLog("不知道圖片名")
+                if picker.sourceType == .camera{
+                    NSLog("相機照片")
+                }else{
+                    NSLog("不知道圖片名")
+                }
             }
         }
+        
         
         // 結束後 關閉
         picker.dismiss(animated: true) {

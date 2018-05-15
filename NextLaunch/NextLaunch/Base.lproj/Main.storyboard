@@ -56,7 +56,7 @@
                                     <action selector="addNewData:" destination="BYZ-38-t0r" id="7Mf-ry-2Gd"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="dice.png" id="4ED-7G-FEd">
+                            <barButtonItem image="dices" id="4ED-7G-FEd">
                                 <connections>
                                     <action selector="launchSelectionAction:" destination="BYZ-38-t0r" id="nMx-Tp-gXZ"/>
                                 </connections>
@@ -134,11 +134,11 @@
             </objects>
             <point key="canvasLocation" x="1342" y="1041"/>
         </scene>
-        <!--Saved Navigation Controller-->
+        <!--最愛-->
         <scene sceneID="CKt-as-ee4">
             <objects>
                 <navigationController storyboardIdentifier="SavedNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="fnN-av-l5e" customClass="SavedNavigationController" customModule="NextLaunch" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="favorites" id="BZW-DM-H0B"/>
+                    <tabBarItem key="tabBarItem" title="最愛" image="BarFavorite" selectedImage="BarFavoriteSelector" id="BZW-DM-H0B"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="JMG-SP-ISt">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -174,11 +174,11 @@
             </objects>
             <point key="canvasLocation" x="-1001" y="1040"/>
         </scene>
-        <!--Search Navigation Controller-->
+        <!--搜尋-->
         <scene sceneID="SLU-PM-4My">
             <objects>
                 <navigationController storyboardIdentifier="SearchNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="9L0-gv-gwa" customClass="SearchNavigationController" customModule="NextLaunch" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="search" id="f5F-S8-rPo"/>
+                    <tabBarItem key="tabBarItem" title="搜尋" image="barSearch.png" selectedImage="barSearchSelector.png" id="f5F-S8-rPo"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="MQ1-gB-WaM">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -193,49 +193,86 @@
             </objects>
             <point key="canvasLocation" x="372" y="1041"/>
         </scene>
-        <!--View Controller-->
+        <!--更多-->
         <scene sceneID="qae-HI-43V">
             <objects>
-                <viewController id="jCo-oC-HJC" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MoreViewController" id="jCo-oC-HJC" customClass="MoreViewController" customModule="NextLaunch" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aba-92-d7B">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qVo-yy-h1H">
-                                <rect key="frame" x="156.5" y="428.5" width="62" height="30"/>
-                                <state key="normal" title="寄信聯絡"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gbd-qK-C9a">
-                                <rect key="frame" x="156.5" y="208.5" width="62" height="30"/>
-                                <state key="normal" title="給予評價"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OKF-gs-hym">
-                                <rect key="frame" x="156.5" y="318.5" width="62" height="30"/>
-                                <state key="normal" title="支持一下"/>
-                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f2o-QR-NCh">
+                                <rect key="frame" x="0.0" y="20" width="375" height="598"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="91" id="BPE-SO-F4U" customClass="MoreCell" customModule="NextLaunch" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="91"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BPE-SO-F4U" id="kd9-Jt-VeC">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="90.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s4W-bF-dMz">
+                                                    <rect key="frame" x="90.5" y="10" width="274.5" height="70.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c20-zD-lTk">
+                                                    <rect key="frame" x="10" y="10" width="70.5" height="70.5"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="c20-zD-lTk" secondAttribute="height" id="zRk-yX-6BT"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="s4W-bF-dMz" firstAttribute="top" secondItem="kd9-Jt-VeC" secondAttribute="top" constant="10" id="5xc-Cf-38X"/>
+                                                <constraint firstAttribute="bottom" secondItem="c20-zD-lTk" secondAttribute="bottom" constant="10" id="6m6-HR-WEU"/>
+                                                <constraint firstItem="s4W-bF-dMz" firstAttribute="leading" secondItem="c20-zD-lTk" secondAttribute="trailing" constant="10" id="976-jd-DNy"/>
+                                                <constraint firstItem="c20-zD-lTk" firstAttribute="top" secondItem="kd9-Jt-VeC" secondAttribute="top" constant="10" id="Jy9-XO-a7B"/>
+                                                <constraint firstAttribute="trailing" secondItem="s4W-bF-dMz" secondAttribute="trailing" constant="10" id="R7o-ue-4Me"/>
+                                                <constraint firstItem="c20-zD-lTk" firstAttribute="leading" secondItem="kd9-Jt-VeC" secondAttribute="leading" constant="10" id="eUi-4d-7Ud"/>
+                                                <constraint firstAttribute="bottom" secondItem="s4W-bF-dMz" secondAttribute="bottom" constant="10" id="fc4-gL-fqc"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="iconLabel" destination="c20-zD-lTk" id="Zq6-TT-CkJ"/>
+                                            <outlet property="titleLabel" destination="s4W-bF-dMz" id="MZc-c2-kmL"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="aN1-Pn-ceg" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="qVo-yy-h1H" secondAttribute="bottom" id="CJ9-AU-Rtz"/>
-                            <constraint firstItem="gbd-qK-C9a" firstAttribute="top" relation="greaterThanOrEqual" secondItem="aN1-Pn-ceg" secondAttribute="top" id="DF4-IK-okQ"/>
-                            <constraint firstItem="OKF-gs-hym" firstAttribute="top" secondItem="gbd-qK-C9a" secondAttribute="bottom" constant="80" id="Jfa-h2-fI4"/>
-                            <constraint firstItem="OKF-gs-hym" firstAttribute="centerX" secondItem="aba-92-d7B" secondAttribute="centerX" id="Sq7-bx-w7r"/>
-                            <constraint firstItem="qVo-yy-h1H" firstAttribute="centerX" secondItem="aba-92-d7B" secondAttribute="centerX" id="ToK-w9-akn"/>
-                            <constraint firstItem="qVo-yy-h1H" firstAttribute="top" secondItem="OKF-gs-hym" secondAttribute="bottom" constant="80" id="gPv-J1-Kcn"/>
-                            <constraint firstItem="OKF-gs-hym" firstAttribute="centerY" secondItem="aba-92-d7B" secondAttribute="centerY" id="gd9-cP-rP6"/>
-                            <constraint firstItem="gbd-qK-C9a" firstAttribute="centerX" secondItem="aba-92-d7B" secondAttribute="centerX" id="jWq-yL-euC"/>
+                            <constraint firstItem="f2o-QR-NCh" firstAttribute="top" secondItem="aN1-Pn-ceg" secondAttribute="top" id="2Xi-5c-01k"/>
+                            <constraint firstItem="f2o-QR-NCh" firstAttribute="leading" secondItem="aN1-Pn-ceg" secondAttribute="leading" id="XOl-HU-V3i"/>
+                            <constraint firstItem="aN1-Pn-ceg" firstAttribute="bottom" secondItem="f2o-QR-NCh" secondAttribute="bottom" id="fF7-Mm-hC7"/>
+                            <constraint firstItem="f2o-QR-NCh" firstAttribute="trailing" secondItem="aN1-Pn-ceg" secondAttribute="trailing" id="n66-bu-v9X"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="aN1-Pn-ceg"/>
                     </view>
-                    <tabBarItem key="tabBarItem" systemItem="more" id="z2G-RM-koE"/>
+                    <tabBarItem key="tabBarItem" title="更多" image="barMore" selectedImage="barMoreSelector" id="z2G-RM-koE"/>
+                    <connections>
+                        <outlet property="tableView" destination="f2o-QR-NCh" id="igM-zQ-dcd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fbW-bf-xpW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="372" y="2106"/>
+            <point key="canvasLocation" x="372" y="2105.3973013493255"/>
         </scene>
     </scenes>
     <resources>
-        <image name="dice.png" width="28" height="25"/>
+        <image name="BarFavorite" width="31" height="31"/>
+        <image name="BarFavoriteSelector" width="31" height="31"/>
+        <image name="barMore" width="31" height="31"/>
+        <image name="barMoreSelector" width="31" height="31"/>
+        <image name="barSearch.png" width="465" height="465"/>
+        <image name="barSearchSelector.png" width="465" height="465"/>
+        <image name="dices" width="28" height="28"/>
         <image name="now" width="46" height="46"/>
     </resources>
 </document>

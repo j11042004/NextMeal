@@ -99,7 +99,11 @@ extension Location : CLLocationManagerDelegate{
         let cancel = UIAlertAction.init(title: "取消", style: .cancel)
         let ok = UIAlertAction.init(title: "前往", style: .default) { (action) in
             if let setUrl = URL(string: UIApplicationOpenSettingsURLString){
-                UIApplication.shared.open(setUrl, options: [String : Any](), completionHandler: nil)
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(setUrl, options: [String : Any](), completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(setUrl)
+                }
             }
         }
         alert.addAction(cancel)

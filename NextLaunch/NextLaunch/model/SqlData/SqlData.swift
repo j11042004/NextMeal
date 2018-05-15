@@ -15,21 +15,23 @@ class SqlData: NSObject {
     var note : String?
     var imageData : Data?
     var address : String?
+    var rating : Double?
     public override init() {
         super.init()
     }
     
-    public init(id : Int?, name : String?, latitude : Double?, longitude : Double?, note : String?, address : String?, imageData : Data?) {
+    public init(id : Int?, name : String?, latitude : Double?, longitude : Double?, note : String?, address : String?, rating :Double?, imageData : Data?) {
         super.init()
         self.id = id
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
         self.address = address
+        self.rating = rating
         self.note = note
         self.imageData = imageData
     }
-    public init(id : Int?, name : String?, latitude : Double?, longitude : Double?, note : String?, address : String?, image : UIImage?) {
+    public init(id : Int?, name : String?, latitude : Double?, longitude : Double?, note : String?, address : String?, rating : Double?, image : UIImage?) {
         super.init()
         self.id = id
         self.name = name
@@ -37,6 +39,7 @@ class SqlData: NSObject {
         self.longitude = longitude
         self.note = note
         self.address = address
+        self.rating = rating
         var imgData : Data?
         // 將 image 轉成 data
         if let image = image{

@@ -18,6 +18,7 @@ class DBManager: NSObject {
     private let MealImg = "Image"
     private let MealNote = "Note"
     private let MealAddress = "Address"
+    private let MealRating = "Rating"
     
     private var databasePath : String!
     private let databaseFileName = "Meal.sqlite"
@@ -45,7 +46,7 @@ class DBManager: NSObject {
                 // Open the database. 這時 Database會被建立
                 if database.open() {
                     // 執行建立 Table 的 Query
-                    let createMoviesTableQuery = "CREATE TABLE \(MealTable) ( \(MealID) INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \(MealName) TEXT, \(MealLongitude) TEXT, \(MealLatitude) TEXT, \(MealImg) BLOB,\(MealNote) TEXT,\(MealAddress) TEXT );"
+                    let createMoviesTableQuery = "CREATE TABLE \(MealTable) ( \(MealID) INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \(MealName) TEXT, \(MealLongitude) TEXT, \(MealLatitude) TEXT, \(MealImg) BLOB,\(MealNote) TEXT,\(MealAddress) TEXT,\(MealRating) DOUBLE );"
                     do {
                         // 嘗試執行 Database
                         try database.executeUpdate(createMoviesTableQuery, values: nil)
@@ -99,9 +100,10 @@ class DBManager: NSObject {
         let imgData = data.imageData
         let note = data.note
         let address = data.address
+        let rating = data.rating
         // 若有 nil 那格就存為 Null
         let null = NSNull()
-        let values : [Any?] = [name , longitude , latitude , imgData , note , address]
+        let values : [Any?] = [name , longitude , latitude , imgData , note , address , rating]
         // 準備要加入的值
         var valueArray = [Any]()
         // 若是 Nil 就替換成 NSNull
@@ -113,7 +115,7 @@ class DBManager: NSObject {
             }
         }
         // 準備 Query
-        let query = "INSERT INTO \(MealTable) (\(MealName),\(MealLongitude),\(MealLatitude),\(MealImg),\(MealNote),\(MealAddress)) VALUES (?,?,?,?,?,?);"
+        let query = "INSERT INTO \(MealTable) (\(MealName),\(MealLongitude),\(MealLatitude),\(MealImg),\(MealNote),\(MealAddress),\(MealRating)) VALUES (?,?,?,?,?,?,?);"
         // 執行 Sql 並把值帶入
         do {
             try database.executeUpdate(query, values: valueArray)
@@ -141,9 +143,10 @@ class DBManager: NSObject {
         let imgData = data.imageData
         let note = data.note
         let address = data.address
+        let rating = data.rating
         // 若有 nil 那格就存為 Null
         let null = NSNull()
-        let values : [Any?] = [name , longitude , latitude , imgData , note , address]
+        let values : [Any?] = [name , longitude , latitude , imgData , note , address , rating]
         // 準備要加入的值
         var valueArray = [Any]()
         // 若是 Nil 就替換成 NSNull
@@ -155,7 +158,7 @@ class DBManager: NSObject {
             }
         }
         // 準備 Query
-        let query = "UPDATE \(MealTable) SET \(MealName) = ?,\(MealLongitude) = ?,\(MealLatitude) = ?,\(MealImg) = ?,\(MealNote) = ? ,\(MealAddress) = ? WHERE \(MealID) = \(id);"
+        let query = "UPDATE \(MealTable) SET \(MealName) = ?,\(MealLongitude) = ?,\(MealLatitude) = ?,\(MealImg) = ?,\(MealNote) = ? ,\(MealAddress) = ? ,\(MealRating) = ? WHERE \(MealID) = \(id);"
         // 執行 Sql 並把值帶入
         do {
             try database.executeUpdate(query, values: valueArray)
@@ -218,13 +221,14 @@ class DBManager: NSObject {
         let latStr = result.string(forColumn: MealLatitude)
         let lonStr = result.string(forColumn: MealLongitude)
         let address = result.string(forColumn: MealAddress)
+        let rating = result.double(forColumn: MealRating)
         let note = result.string(forColumn: MealNote)
         let imageData = result.data(forColumn: MealImg)
         // 將 座標轉成 Double
         let lat = self.strToDouble(str: latStr)
         let lon = self.strToDouble(str: lonStr)
         
-        let data = SqlData(id: id, name: name, latitude: lat, longitude: lon, note: note, address : address ,imageData: imageData)
+        let data = SqlData(id: id, name: name, latitude: lat, longitude: lon, note: note, address: address, rating: rating, imageData: imageData)
         return data
     }
     private func strToDouble(str:String?) -> Double?{

@@ -16,6 +16,7 @@ class TabBarViewController: UITabBarController , UITabBarControllerDelegate {
     }
     override func viewWillAppear(_ animated: Bool) {
         // 選擇自己要的 vc index
+        self.selectedIndex = 2
     }
     
     override func didReceiveMemoryWarning() {

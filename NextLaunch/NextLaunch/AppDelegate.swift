@@ -12,10 +12,13 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    private let firstUse = "UserDefaultFirstUse"
-
+    private let iapManager : IAPManager = IAPManager.sharedInstance
+    // 要先設定 productIDs 才可以取得 商品資訊
+    private let productIDs : [String] = ["ios.uran.tea"]
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        iapManager.addNewProductObserver()
         
+        iapManager.requestProductFromApple(WithProductIDs: self.productIDs)
         return true
     }
 
@@ -42,7 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        // 移除交易觀察者
+        iapManager.removeProductObserver()
     }
 
 

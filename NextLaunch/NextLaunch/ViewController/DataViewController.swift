@@ -17,6 +17,8 @@ class DataViewController: UIViewController {
     @IBOutlet weak var nowLocationBtn: UIButton!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var infoView: UIView!
+    /// 評價星星
+    @IBOutlet weak var appView: AppraiseView!
     @IBOutlet weak var goalTextField: UITextField!
     @IBOutlet weak var addressTextView: UITextView!
     
@@ -27,6 +29,7 @@ class DataViewController: UIViewController {
     @IBOutlet weak var imgLabel: UILabel!
     
     @IBOutlet weak var decideAddressBtn: UIButton!
+    
     
     public var data : SqlData?
     public var goalPlace : ResultPlace?
@@ -41,7 +44,9 @@ class DataViewController: UIViewController {
     var lastLocation : CLLocation?
     var goalLocation : CLLocation?
     var infoViewSize : CGSize!
+    let mapMinHeight : CGFloat = 200
     var constraintHeight : CGFloat = 0
+    
     
     var changeBool = false
     var touchBeganPoint : CGPoint?
@@ -92,16 +97,20 @@ class DataViewController: UIViewController {
         self.barView.layer.cornerRadius = 5
         self.navigationController?.navigationBar.isHidden = true
         
+        self.mapViewHConstraint.constant = self.mapMinHeight
+        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         // 將取得的 Data 資料或是 Place 放到 UI 上
         if let _ = self.data{
             self.setDataInfo()
         }else if let _ = self.goalPlace{
             self.setPlaceInfo()
+        }else{
+            // 若是都沒有就設定評價為 0
+            self.appView.setRating(0)
         }
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
         // 設定 ScrollView 的大小
         self.infoViewSize = self.infoView.frame.size
         self.scrollView.contentSize = CGSize(width: self.infoViewSize.width, height: self.infoViewSize.height + 40)
@@ -114,12 +123,15 @@ class DataViewController: UIViewController {
     func setDataInfo(){
         self.goalTextField.text = self.data?.name
         self.addressTextView.text = self.data?.address
+        self.addressTextView.centerVertically()
         
         if self.goalTextField.text?.count == 0{
             // 用程式碼觸發 decideAddressBtn 的 方法，讓使用者一開始不行在 map 上新增 目的地
             self.decideAddressBtn.sendActions(for: .touchUpInside)
         }
         self.noteTextView.text = self.data?.note
+        // 設定評價
+        self.appView.setRating(self.data?.rating)
         // 取得 圖片
         if let data = self.data?.imageData{
             let image = UIImage(data: data)
@@ -141,9 +153,9 @@ class DataViewController: UIViewController {
         }
         //顯示導航按鈕
         self.leadBtn.isHidden = false
-        // 曲的座標
+        // 取的座標
         let coordinate = CLLocationCoordinate2D.init(latitude: latitude, longitude: longitude)
-        // 新增大頭釘到map 上
+        // 新增大頭針釘到map 上
         self.mapAddNewAnnotation(coordinate: coordinate, title: self.data?.name, removeOld: true)
     }
     
@@ -155,6 +167,9 @@ class DataViewController: UIViewController {
             self.decideAddressBtn.sendActions(for: .touchUpInside)
         }
         self.addressTextView.text = self.goalPlace?.address
+        self.addressTextView.centerVertically()
+        // 設定評價
+        self.appView.setRating(self.goalPlace?.rating)
         // 放入圖片
         if let image = self.goalPlace?.stickerPhoto {
             self.imageView.image = image
@@ -165,7 +180,6 @@ class DataViewController: UIViewController {
             return
         }
         self.leadBtn.isHidden = false
-        
         // 新增大頭釘到map 上
         self.mapAddNewAnnotation(coordinate: coordinate, title: self.data?.name, removeOld: true)
     }
@@ -225,7 +239,11 @@ class DataViewController: UIViewController {
         }
         let ok = UIAlertAction.init(title: "前往", style: .default) { (action) in
             if let setUrl = URL(string: UIApplicationOpenSettingsURLString){
-                UIApplication.shared.open(setUrl, options: [String : Any](), completionHandler: nil)
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(setUrl, options: [String : Any](), completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(setUrl)
+                }
             }
         }
         alert.addAction(cancel)
@@ -257,6 +275,7 @@ extension DataViewController {
         
         let note = self.noteTextView.text
         let address = self.addressTextView.text
+        let rating = self.appView.rating
         let image = self.imageView.image
         var latitude : Double?
         var longtiude : Double?
@@ -278,6 +297,7 @@ extension DataViewController {
             savedData.name = name
             savedData.latitude = latitude
             savedData.longitude = longtiude
+            savedData.rating = rating
             savedData.note = note
             savedData.address = address
             if let image = image{
@@ -296,7 +316,8 @@ extension DataViewController {
                 self.showSureAlert(title: nil, message: "更新失敗", cancelTitle: "確定")
             }
         }else{
-            let savedData = SqlData(id: nil, name: name, latitude: latitude, longitude: longtiude, note: note, address: address, image: image)
+            // 要新增的 Data
+            let savedData = SqlData(id: nil, name: name, latitude: latitude, longitude: longtiude, note: note, address: address, rating: rating , image: image)
             // 新增 Data
             if database.insertData(savedData) {
                 self.showSureAlert(title: nil, message: "已儲存成功", cancelTitle: "確定")
@@ -351,7 +372,10 @@ extension DataViewController {
         }
         
     }
-    
+    /// 決定是否平價
+    @IBAction func setBigMeal(_ sender: UISwitch) {
+        print("Big Meal : \(sender.isOn)")
+    }
     /// 在 地圖上用點擊新增 Annotation
     @objc func mapviewTapAdd(_ sender : UITapGestureRecognizer){
         self.view.endEditing(true)
@@ -369,17 +393,17 @@ extension DataViewController {
     
     @objc func showKeyboardAction (_ sender : Notification){
         self.constraintHeight = self.mapViewHConstraint.constant
-        if self.mapViewHConstraint.constant <= 150 {
+        if self.mapViewHConstraint.constant <= mapMinHeight {
             return
         }
-        self.mapViewHConstraint.constant = 150
+        self.mapViewHConstraint.constant = mapMinHeight
         UIView.animate(withDuration: 0.3) {
             // 跑這行才會執行 Layout 的動畫
             self.view.layoutIfNeeded()
         }
     }
     @objc func hideKeyboardAction (_ sender : Notification){
-        if self.constraintHeight <= 150 {
+        if self.constraintHeight <= mapMinHeight {
             return
         }
         self.mapViewHConstraint.constant = self.constraintHeight
@@ -409,20 +433,35 @@ extension DataViewController : MKMapViewDelegate{
             // 新增座標點
             self.mapView.addAnnotation(pinAnnotation)
         }
-        // 判斷地址欄是否有 地址，若有就不轉換並加入
-        if let address = self.addressTextView.text ,
-            address.count > 0 {
-        }else{
-            self.addressManager.coordinateToAddress(With: coordinate) { (success, error, address) in
-                if success{
-                    self.addressTextView.text = address
+        
+        // 更新 goalLocation
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        self.goalLocation = location
+        // 判斷 place 地址是否存在，若是就設定
+        if let placeAddress = self.goalPlace?.address{
+            self.addressTextView.text = placeAddress
+            self.addressTextView.centerVertically()
+            return
+        }
+        // 將地址轉為文字
+        self.addressManager.coordinateToAddress(With: coordinate) { (success, error, address) in
+            if success{
+                var addressText : String?
+                // 判斷 Data 中的 坐標和地址是否存在，若存在再比對是否與大頭針座標相同
+                if let dataLat = self.data?.latitude ,
+                    let dataLon = self.data?.longitude,
+                    let dataAddress = self.data?.address,
+                    dataLat == coordinate.latitude && dataLon == coordinate.longitude {
+                    // 相同就顯示 data 存的地址
+                    addressText = dataAddress
+                }else{
+                    addressText = address
                 }
+                self.addressTextView.text = addressText
+                self.addressTextView.centerVertically()
             }
         }
         
-        // 在這更新 goalLocation
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        self.goalLocation = location
     }
     // 傳回 mapview 上大頭針的樣式
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -496,8 +535,14 @@ extension DataViewController : LocationDelegate{
         let options = [MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
                        MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)]
         // 目的地大頭針
-        let placemark = MKPlacemark(coordinate: goalCoordinate)
-        let mapItem = MKMapItem(placemark: placemark)
+        var placeMark : MKPlacemark!
+        if #available(iOS 10.0, *){
+            placeMark = MKPlacemark(coordinate: goalCoordinate)
+        }else{
+            placeMark = MKPlacemark(coordinate: goalCoordinate, addressDictionary: nil)
+        }
+        
+        let mapItem = MKMapItem(placemark: placeMark)
         mapItem.name = self.goalTextField.text
         
         // 詢問是否要跳轉到 Apple map
@@ -601,4 +646,17 @@ extension DataViewController {
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.touchBeganPoint = nil
     }
+}
+
+
+extension UITextView {
+    /// 文字對齊正中央
+    func centerVertically() {
+        let fittingSize = CGSize(width: bounds.width, height: CGFloat.greatestFiniteMagnitude)
+        let size = sizeThatFits(fittingSize)
+        let topOffset = (bounds.size.height - size.height * zoomScale) / 2
+        let positiveTopOffset = max(1, topOffset)
+        contentOffset.y = -positiveTopOffset
+    }
+    
 }
