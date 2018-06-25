@@ -60,7 +60,6 @@ class SearchView: UIView {
         return radius
     }
     
-    
     public var delegate : SearchDelegate?
     
     convenience init(){
@@ -131,28 +130,30 @@ class SearchView: UIView {
     @IBAction func chooseSelete(_ sender: UIButton) {
         
     }
+   
     
+    // 呼叫更換 距離的 Alert
     @IBAction func insertRegionAlert(_ sender: UIButton) {
         let alert = UIAlertController(title: "請輸入範圍", message: "範圍最小為 500 公尺，最大為 10000 公尺", preferredStyle: .alert)
         alert.addTextField { (textfield) in
             // 設定鍵盤的種類
-            textfield.keyboardType = .numbersAndPunctuation
+            textfield.keyboardType = UIKeyboardType.numberPad
         }
         let decide = UIAlertAction(title: "確定", style: .default) { (_) in
             // 判斷輸入框的文字是否可轉成 Float ，並且 > 最小值
             guard let text = alert.textFields?.first?.text,
-                let value = Float(text),
-                value > self.regionSlider.minimumValue
+                let range = Float(text),
+                range >=  self.regionSlider.minimumValue
             else{
-                self.changeRadiusValue(value: self.regionSlider.minimumValue)
+                self.changeRadiusValue(value: self.regionSlider.value)
                 return
             }
             // 若超過最大值就設為最大值
-            if value > self.regionSlider.maximumValue {
+            if range > self.regionSlider.maximumValue {
                 self.changeRadiusValue(value: self.regionSlider.maximumValue)
                 return
             }
-            self.changeRadiusValue(value: value)
+            self.changeRadiusValue(value: range)
 
         }
         alert.addAction(decide)
@@ -167,9 +168,16 @@ class SearchView: UIView {
     }
     /// 更換距離
     private func changeRadiusValue(value : Float){
-        self.regionSlider.value = value
-        self.regionLabel.text = "\(value)"
-        self.delegate?.serchViewChangedSearchRegion?(With: value)
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.regionSlider.setValue(value, animated: true)
+            }, completion: { (_) in
+                
+                self.regionLabel.text = "\(value)"
+                self.delegate?.serchViewChangedSearchRegion?(With: value)
+            })
+        }
+        
     }
 }
 

@@ -25,7 +25,7 @@ class MoreViewController: UIViewController {
     private let cellID = "Cell"
     private let headerID = "header"
     private let footID = "footer"
-    private let cellsDict = ["More and more","再忙也要來杯咖啡","哈拉聯絡","認同請分享！"]
+    private let cellsDict = ["More and more","贊助一杯咖啡","寄信告知","認同請分享！"]
     private let cellIcons = ["☞","☕️","📮","💯"]
     private let cellKind = [ContentType.More , ContentType.Iap , ContentType.Mail , ContentType.Share]
     @IBOutlet weak var tableView: UITableView!

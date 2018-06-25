@@ -14,6 +14,7 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var searchView: SearchView!
     @IBOutlet weak var nowButton: UIButton!
+    
     private let waitingView = WaitingView()
     private let location = Location.shardInstrance
     let search : SearchObject = SearchObject.shardInstance
@@ -21,6 +22,7 @@ class SearchViewController: UIViewController {
     private var userLocation : CLLocation!
     private var places : [ResultPlace] = [ResultPlace]()
     private var annotations : [MKAnnotation] = [MKAnnotation]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchView.delegate = self
@@ -47,7 +49,7 @@ class SearchViewController: UIViewController {
         self.moveRegion(coordinate: self.mapView.userLocation.coordinate, degree: 0.001)
     }
     
-    /// 顯示 DataViewController，
+    /// 顯示 DataViewController
     func showDataVC(place : ResultPlace? , data : SqlData?) {
         let bundele : Bundle = Bundle(for: DataViewController.self)
         let nextVC = DataViewController(nibName: "DataViewController", bundle: bundele)
@@ -70,6 +72,7 @@ class SearchViewController: UIViewController {
             self.present(nextVC, animated: false, completion: nil)
         }
     }
+    // 進行 Google map place 搜尋
     func searchData(With place : ResultPlace , completion : (_ data : SqlData?)->Void){
         guard let name = place.name else {
             completion(nil)
@@ -159,14 +162,12 @@ extension SearchViewController : SearchDelegate{
         search.searchPlaces(With: query, Location: location, Radius: radius, NextPage: nextToken) { (places, errorMsg) in
             if let errorMsg = errorMsg{
                 print("search Error Message : \(errorMsg)")
-                // 關閉搜尋 Waiting，跳出 Alert
-                self.waitingView.showing(false)
+                // 跳出 Alert
                 self.showErrorAlert(title: "搜尋錯誤", message: "無法搜尋到結果，請更換關鍵字與搜尋範圍，或過段時間再次搜尋!")
                 return
             }
             guard let places = places else{
-                // 關閉搜尋 Waiting，跳出 Alert
-                self.waitingView.showing(false)
+                // 跳出 Alert
                 self.showErrorAlert(title: "搜尋錯誤", message: "無法搜尋到結果，請更換關鍵字與搜尋範圍，或過段時間再次搜尋!")
                 return
             }
@@ -185,11 +186,7 @@ extension SearchViewController : SearchDelegate{
             }
             // 若 回傳結果 為0 跳出警告視窗
             if self.places.count == 0{
-                DispatchQueue.main.async {
-                    // 關閉 WaitingView
-                    self.waitingView.showing(false)
-                    self.showErrorAlert(title: "搜尋錯誤", message: "無法搜尋到結果，請更換關鍵字與搜尋範圍，或過段時間再次搜尋!")
-                }
+                self.showErrorAlert(title: "搜尋錯誤", message: "無法搜尋到結果，請更換關鍵字與搜尋範圍，或過段時間再次搜尋!")
                 return
             }
             // 判斷 next token 是否為 nil
@@ -215,14 +212,13 @@ extension SearchViewController : SearchDelegate{
         alert.addAction(cancel)
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
+            self.waitingView.showing(false)
         }
-        
     }
 }
 // MARK: - MKMapViewDelegate
 extension SearchViewController : MKMapViewDelegate{
     /// 新增新的大頭針到 map 上
-    ///
     /// - Parameters:
     ///   - coordinate: 輸入包含經緯度的座標，用CLLocationCoordinate2D
     ///   - note: 輸入的註解

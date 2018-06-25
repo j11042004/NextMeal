@@ -62,8 +62,8 @@ class IAPManager: NSObject {
     //MARK: - 購買商品
     /// 購買商品
     public func buyProduct(With product : SKProduct){
-        let msg = "商品名稱：\(product.localizedTitle)\n\(product.localizedDescription)\n價格：\(product.price)元"
-        self.showBuyAlert(Product: product, Title: "購買資訊", Message: msg)
+        let msg = "\(product.localizedDescription)\n價格：\(product.price)元"
+        self.showBuyAlert(Product: product, Title: "是否要請一杯咖啡？", Message: msg)
     }
     //MARK: - 回復購買商品
     /// 回復購買商品
@@ -323,9 +323,14 @@ extension IAPManager{
             self.isShowAlert = false
             self.nowIsTransaction(Is: false)
         }
-        
+        // 新增 Coffee ImageView
+        let coffeeImage = UIImage(named: "coffee.png")
+        alert.addImageView(With: coffeeImage)
         alert.addAction(buy)
         alert.addAction(cancel)
+        
+        
+        
         DispatchQueue.main.async {
             if !self.isShowAlert {
                 self.isShowAlert = true

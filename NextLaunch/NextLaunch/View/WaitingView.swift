@@ -43,8 +43,10 @@ class WaitingView: UIView {
     
     /// 顯示或隱藏 Waiting view
     public func showing(_ show : Bool){
-        self.isHidden = !show
-        self.activityView.isHidden = !show
+        DispatchQueue.main.async {
+            self.isHidden = !show
+            self.activityView.isHidden = !show
+        }
     }
     /// 為 WaitingView設定佈滿的 Constraint
     ///
